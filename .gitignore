@@ -1,0 +1,42 @@
+# Compiled objects
+*.o
+*.a
+*.so
+*.dylib
+
+main
+
+# Executables
+*.out
+a.out
+
+# Build directories
+build/
+dist/
+out/
+
+# Dependency files
+*.d
+
+# Preprocessed files
+*.i
+*.s
+
+# Debug files
+*.dSYM/
+*.su
+
+# Editor artifacts
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Clangd / compile commands
+compile_commands.json
+.cache/
+
+# Claude local settings
+.claude/settings.local.json
