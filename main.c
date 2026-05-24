@@ -9,81 +9,77 @@
 
 struct ArraySlice {
   bool is_empty;
-  char *value;
+  char* value;
   size_t length;
   size_t capacity;
 };
 
 struct Result {
-  struct ArraySlice *array_slice;
-  char *error_message;
+  struct ArraySlice* array_slice;
+  char* error_message;
   bool is_success;
 };
 
-struct ArraySlice *make_string_array(char *existing_value, size_t capacity);
+struct ArraySlice*
+make_string_array(char* existing_value, size_t capacity);
 
-void free_string_array(struct ArraySlice *result) {
+void
+free_string_array(struct ArraySlice* result) {
   free(result->value);
   free(result);
 
   return;
 }
 
-struct ArraySlice *add_capacity(struct ArraySlice *smaller_array,
-                                size_t new_capacity) {
+struct ArraySlice*
+add_capacity(struct ArraySlice* smaller_array, size_t new_capacity) {
   if (new_capacity <= smaller_array->capacity) {
     return NULL;
   }
 
-  struct ArraySlice *larger_array =
-      make_string_array(smaller_array->value, new_capacity);
+  struct ArraySlice* larger_array = make_string_array(smaller_array->value, new_capacity);
 
   free_string_array(smaller_array);
 
   return larger_array;
 }
 
-struct Result copy_into_array_slice(size_t starting_value, char *existing_value,
-                                    struct ArraySlice *destination) {
+struct Result
+copy_into_array_slice(size_t starting_value, char* existing_value, struct ArraySlice* destination) {
   if (existing_value == NULL) {
-    struct Result result = {
-        .array_slice = destination, .error_message = NULL, .is_success = true};
+    struct Result result = {.array_slice = destination, .error_message = NULL, .is_success = true};
     return result;
   }
 
-  size_t index = 0;
+  size_t length_of_existing_value = strlen(existing_value);
+  size_t new_length = starting_value + length_of_existing_value;
+  if (new_length > destination->capacity) {
+    destination = add_capacity(destination, destination->capacity * 2);
 
-  while (existing_value[index] != '\0') {
-    if (starting_value > destination->capacity) {
-      destination = add_capacity(destination, destination->capacity * 2);
+    if (destination == NULL) {
+      struct Result failure_message = {
+        .error_message = "Capacity is not large enough",
+        .is_success = false,
+        .array_slice = destination};
 
-      if (destination == NULL) {
-        struct Result failure_message = {.error_message =
-                                             "Capacity is not large enough",
-                                         .is_success = false,
-                                         .array_slice = destination};
-
-        return failure_message;
-      }
+      return failure_message;
     }
-
-    destination->value[starting_value] = existing_value[index];
-
-    starting_value += 1;
-    index += 1;
   }
 
+  memcpy(destination->value + starting_value, existing_value, length_of_existing_value);
+
   // Add the \0 terminator
-  destination->value[starting_value] = '\0';
-  destination->length = starting_value;
+  size_t null_terminator_index = starting_value + length_of_existing_value;
+  destination->value[null_terminator_index] = '\0';
+  destination->length = null_terminator_index;
   destination->is_empty = false;
 
-  struct Result result = {
-      .array_slice = destination, .error_message = NULL, .is_success = true};
+  struct Result result = {.array_slice = destination, .error_message = NULL, .is_success = true};
   return result;
 }
 
-struct ArraySlice *make_string_array(char *existing_value, size_t capacity) {
+struct ArraySlice*
+make_string_array(char* existing_value, size_t capacity) {
   if (capacity == 0) {
     printf("Capacity cannot be 0!\n");
 
@@ -91,8 +87,8 @@ struct ArraySlice *make_string_array(char *existing_value, size_t capacity) {
   }
 
   // Account for the \0 terminator
-  char *fully_allocated_memory = malloc(capacity + 1);
-  struct ArraySlice *result = malloc(sizeof(struct ArraySlice));
+  char* fully_allocated_memory = malloc(capacity + 1);
+  struct ArraySlice* result = malloc(sizeof(struct ArraySlice));
 
   result->value = fully_allocated_memory;
   result->is_empty = true;
@@ -109,10 +105,9 @@ struct ArraySlice *make_string_array(char *existing_value, size_t capacity) {
   return result;
 }
 
-struct ArraySlice *append_string_array(struct ArraySlice *array_slice,
-                                       char *new_value) {
-  struct Result result =
-      copy_into_array_slice(array_slice->length, new_value, array_slice);
+struct ArraySlice*
+append_string_array(struct ArraySlice* array_slice, char* new_value) {
+  struct Result result = copy_into_array_slice(array_slice->length, new_value, array_slice);
 
   if (!result.is_success) {
     printf("%s\n", result.error_message);
@@ -123,7 +118,8 @@ struct ArraySlice *append_string_array(struct ArraySlice *array_slice,
   return result.array_slice;
 }
 
-size_t my_strlen(char *string) {
+size_t
+my_strlen(char* string) {
   if (string == NULL) {
     printf("string is NULL\n");
 
@@ -131,18 +127,18 @@ size_t my_strlen(char *string) {
   }
 
   size_t result = 0;
-  for (; string[result] != '\0'; result += 1) {
-  }
+  for (; string[result] != '\0'; result += 1) {}
 
   return result;
 }
 
-void print_hello_world(size_t count, char *names[]) {
+void
+print_hello_world(size_t count, char* names[]) {
   if (count < 2) {
     return;
   }
 
-  struct ArraySlice *hello_world = make_string_array("Hello", 20);
+  struct ArraySlice* hello_world = make_string_array("Hello", 20);
 
   if (count == 2) {
     hello_world = append_string_array(hello_world, " ");
@@ -165,17 +161,21 @@ void print_hello_world(size_t count, char *names[]) {
 
   size_t length = my_strlen(hello_world->value);
 
-  printf("Size of hello_world is %zu and my_strlen is %zu and strlen is %zu\n",
-         hello_world->length, length, strlen(hello_world->value));
+  printf(
+    "Size of hello_world is %zu and my_strlen is %zu and strlen is %zu\n",
+    hello_world->length,
+    length,
+    strlen(hello_world->value));
   printf("hello_world is \'%s\'\n", hello_world->value);
   printf("Capacity is %zu\n", hello_world->capacity);
 
   return;
 }
 
-int main(int argc, char *argv[]) {
+int
+main(int argc, char* argv[]) {
   /* char *name = "Hello World"; */
-  char *another_name = "Hello World";
+  char* another_name = "Hello World";
   /* another_name[11] = 'a'; */
 
   size_t foobar = 123;
@@ -204,8 +204,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  printf("String: %s, Count: %zd, Manual Count: %zd\n", another_name,
-         strlen(another_name), index);
+  printf("String: %s, Count: %zd, Manual Count: %zd\n", another_name, strlen(another_name), index);
 
   if (argc >= 2) {
     print_hello_world((size_t)argc, argv);
