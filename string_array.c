@@ -32,6 +32,32 @@ is_empty(struct ArraySlice* s) {
   return s->is_empty;
 }
 
+struct Result {
+  struct ArraySlice* array_slice;
+  char* error_message;
+  bool is_success;
+};
+
+bool
+is_success(struct Result* r) {
+  return r->is_success;
+}
+
+char*
+get_error_message(struct Result* r) {
+  return r->error_message;
+}
+
+struct ArraySlice*
+get_array_slice(struct Result* r) {
+  return r->array_slice;
+}
+
+void
+free_result(struct Result* r) {
+  free(r);
+}
+
 void
 free_string_array(struct ArraySlice* result) {
   free(result->value);
@@ -53,25 +79,26 @@ add_capacity(struct ArraySlice* smaller_array, size_t new_capacity) {
   return larger_array;
 }
 
-struct Result
+struct Result*
 copy_into_array_slice(size_t starting_value, char* existing_value, struct ArraySlice* destination) {
   if (existing_value == NULL) {
-    struct Result result = {.array_slice = destination, .error_message = NULL, .is_success = true};
+    struct Result* result = malloc(sizeof(struct Result));
+    *result = (struct Result){.array_slice = destination, .error_message = NULL, .is_success = true};
     return result;
   }
 
   size_t length_of_existing_value = strlen(existing_value);
   size_t new_length = starting_value + length_of_existing_value;
   if (new_length > destination->capacity) {
-    destination = add_capacity(destination, destination->capacity * 2);
+    size_t new_capacity = new_length * 2;
+    destination = add_capacity(destination, new_capacity);
 
     if (destination == NULL) {
-      struct Result failure_message = {
-        .error_message = "Capacity is not large enough",
-        .is_success = false,
-        .array_slice = destination};
-
-      return failure_message;
+      struct Result* failure = malloc(sizeof(struct Result));
+      *failure = (struct Result){.error_message = "Capacity is not large enough",
+                                 .is_success = false,
+                                 .array_slice = destination};
+      return failure;
     }
   }
 
@@ -83,7 +110,8 @@ copy_into_array_slice(size_t starting_value, char* existing_value, struct ArrayS
   destination->length = null_terminator_index;
   destination->is_empty = false;
 
-  struct Result result = {.array_slice = destination, .error_message = NULL, .is_success = true};
+  struct Result* result = malloc(sizeof(struct Result));
+  *result = (struct Result){.array_slice = destination, .error_message = NULL, .is_success = true};
   return result;
 }
 
@@ -104,27 +132,34 @@ make_string_array(char* existing_value, size_t capacity) {
   result->capacity = capacity;
   result->length = 0;
 
-  struct Result message = copy_into_array_slice(0, existing_value, result);
-  if (!message.is_success) {
-    printf("%s\n", message.error_message);
+  struct Result* message = copy_into_array_slice(0, existing_value, result);
+  if (!is_success(message)) {
+    printf("%s\n", get_error_message(message));
+    free_result(message);
 
     return NULL;
   }
+
+  free_result(message);
 
   return result;
 }
 
 struct ArraySlice*
 append_string_array(struct ArraySlice* array_slice, char* new_value) {
-  struct Result result = copy_into_array_slice(array_slice->length, new_value, array_slice);
+  struct Result* result = copy_into_array_slice(array_slice->length, new_value, array_slice);
 
-  if (!result.is_success) {
-    printf("%s\n", result.error_message);
+  if (!is_success(result)) {
+    printf("%s\n", get_error_message(result));
+    free_result(result);
 
     return NULL;
   }
 
-  return result.array_slice;
+  struct ArraySlice* array = get_array_slice(result);
+  free_result(result);
+
+  return array;
 }
 
 size_t
