@@ -114,6 +114,52 @@ test_add_capacity_smaller_returns_null(void) {
   free_string_array(s);
 }
 
+void
+test_copy_into_array_slice_success_is_success(void) {
+  struct ArraySlice* s = make_string_array("hello", 20);
+  struct Result* r = copy_into_array_slice(0, "world", s);
+  TEST_ASSERT_TRUE(is_success(r));
+  free_result(r);
+  free_string_array(s);
+}
+
+void
+test_copy_into_array_slice_success_returns_destination(void) {
+  struct ArraySlice* s = make_string_array("hello", 20);
+  struct Result* r = copy_into_array_slice(0, "world", s);
+  TEST_ASSERT_EQUAL_PTR(s, get_array_slice(r));
+  free_result(r);
+  free_string_array(s);
+}
+
+void
+test_copy_into_array_slice_success_no_error_message(void) {
+  struct ArraySlice* s = make_string_array("hello", 20);
+  struct Result* r = copy_into_array_slice(0, "world", s);
+  TEST_ASSERT_NULL(get_error_message(r));
+  free_result(r);
+  free_string_array(s);
+}
+
+void
+test_copy_into_array_slice_null_value_is_success(void) {
+  struct ArraySlice* s = make_string_array("hello", 20);
+  struct Result* r = copy_into_array_slice(0, NULL, s);
+  TEST_ASSERT_TRUE(is_success(r));
+  free_result(r);
+  free_string_array(s);
+}
+
+void
+test_copy_into_array_slice_null_value_returns_destination(void) {
+  struct ArraySlice* s = make_string_array("hello", 20);
+  struct Result* r = copy_into_array_slice(0, NULL, s);
+  TEST_ASSERT_EQUAL_PTR(s, get_array_slice(r));
+  free_result(r);
+  free_string_array(s);
+}
+
+
 int
 main(void) {
   UNITY_BEGIN();
@@ -136,5 +182,10 @@ main(void) {
   RUN_TEST(test_add_capacity_preserves_value);
   RUN_TEST(test_add_capacity_smaller_returns_null);
 
+  RUN_TEST(test_copy_into_array_slice_success_is_success);
+  RUN_TEST(test_copy_into_array_slice_success_returns_destination);
+  RUN_TEST(test_copy_into_array_slice_success_no_error_message);
+  RUN_TEST(test_copy_into_array_slice_null_value_is_success);
+  RUN_TEST(test_copy_into_array_slice_null_value_returns_destination);
   return UNITY_END();
 }
