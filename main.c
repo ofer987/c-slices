@@ -76,15 +76,18 @@ print_hello_world(size_t count, char* names[]) {
     hello_world = append_string_array(hello_world, names[count - 1]);
   }
 
-  size_t length = my_strlen(hello_world->value);
+  char* hello_world_value = get_value(hello_world);
+  size_t hello_world_length = get_length(hello_world);
+  size_t hello_world_capacity = get_capacity(hello_world);
+  size_t length = my_strlen(hello_world_value);
 
   printf(
     "Size of hello_world is %zu and my_strlen is %zu and strlen is %zu\n",
-    hello_world->length,
+    hello_world_length,
     length,
-    strlen(hello_world->value));
-  printf("hello_world is \'%s\'\n", hello_world->value);
-  printf("Capacity is %zu\n", hello_world->capacity);
+    strlen(hello_world_value));
+  printf("hello_world is \'%s\'\n", hello_world_value);
+  printf("Capacity is %zu\n", hello_world_capacity);
 
   return;
 }

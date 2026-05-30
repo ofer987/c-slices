@@ -13,29 +13,29 @@ tearDown(void) {}
 void
 test_make_string_array_sets_capacity(void) {
   struct ArraySlice* s = make_string_array("hello", 20);
-  TEST_ASSERT_EQUAL_size_t(20, s->capacity);
+  TEST_ASSERT_EQUAL_size_t(20, get_capacity(s));
   free_string_array(s);
 }
 
 void
 test_make_string_array_sets_length(void) {
   struct ArraySlice* s = make_string_array("hello", 20);
-  TEST_ASSERT_EQUAL_size_t(5, s->length);
+  TEST_ASSERT_EQUAL_size_t(5, get_length(s));
   free_string_array(s);
 }
 
 void
 test_make_string_array_sets_value(void) {
   struct ArraySlice* s = make_string_array("hello", 20);
-  TEST_ASSERT_EQUAL_STRING("hello", s->value);
+  TEST_ASSERT_EQUAL_STRING("hello", get_value(s));
   free_string_array(s);
 }
 
 void
 test_make_string_array_null_value(void) {
   struct ArraySlice* s = make_string_array(NULL, 20);
-  TEST_ASSERT_EQUAL_size_t(0, s->length);
-  TEST_ASSERT_TRUE(s->is_empty);
+  TEST_ASSERT_EQUAL_size_t(0, get_length(s));
+  TEST_ASSERT_TRUE(is_empty(s));
   free_string_array(s);
 }
 
@@ -60,7 +60,7 @@ void
 test_append_string_array_updates_value(void) {
   struct ArraySlice* s = make_string_array("hello", 20);
   s = append_string_array(s, " world");
-  TEST_ASSERT_EQUAL_STRING("hello world", s->value);
+  TEST_ASSERT_EQUAL_STRING("hello world", get_value(s));
   free_string_array(s);
 }
 
@@ -68,7 +68,7 @@ void
 test_append_string_array_updates_length(void) {
   struct ArraySlice* s = make_string_array("hello", 20);
   s = append_string_array(s, " world");
-  TEST_ASSERT_EQUAL_size_t(11, s->length);
+  TEST_ASSERT_EQUAL_size_t(11, get_length(s));
   free_string_array(s);
 }
 
@@ -76,8 +76,8 @@ void
 test_append_string_array_grows_capacity(void) {
   struct ArraySlice* s = make_string_array("hello", 6);
   s = append_string_array(s, " world");
-  TEST_ASSERT_EQUAL_STRING("hello world", s->value);
-  TEST_ASSERT_EQUAL_size_t(11, s->length);
+  TEST_ASSERT_EQUAL_STRING("hello world", get_value(s));
+  TEST_ASSERT_EQUAL_size_t(11, get_length(s));
   free_string_array(s);
 }
 
@@ -86,7 +86,7 @@ test_append_string_array_multiple(void) {
   struct ArraySlice* s = make_string_array("hello", 20);
   s = append_string_array(s, " ");
   s = append_string_array(s, "world");
-  TEST_ASSERT_EQUAL_STRING("hello world", s->value);
+  TEST_ASSERT_EQUAL_STRING("hello world", get_value(s));
   free_string_array(s);
 }
 
@@ -94,7 +94,7 @@ void
 test_add_capacity_increases_capacity(void) {
   struct ArraySlice* s = make_string_array("hello", 10);
   s = add_capacity(s, 20);
-  TEST_ASSERT_EQUAL_size_t(20, s->capacity);
+  TEST_ASSERT_EQUAL_size_t(20, get_capacity(s));
   free_string_array(s);
 }
 
@@ -102,7 +102,7 @@ void
 test_add_capacity_preserves_value(void) {
   struct ArraySlice* s = make_string_array("hello", 10);
   s = add_capacity(s, 20);
-  TEST_ASSERT_EQUAL_STRING("hello", s->value);
+  TEST_ASSERT_EQUAL_STRING("hello", get_value(s));
   free_string_array(s);
 }
 

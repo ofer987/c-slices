@@ -3,12 +3,19 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-struct ArraySlice {
-  bool is_empty;
-  char* value;
-  size_t length;
-  size_t capacity;
-};
+typedef struct ArraySlice ArraySlice;
+
+size_t
+get_length(struct ArraySlice* s);
+
+size_t
+get_capacity(struct ArraySlice* s);
+
+char*
+get_value(struct ArraySlice* s);
+
+bool
+is_empty(struct ArraySlice* s);
 
 struct Result {
   struct ArraySlice* array_slice;

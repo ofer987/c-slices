@@ -1,8 +1,36 @@
 #include "string_array.h"
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+struct ArraySlice {
+  bool is_empty;
+  char* value;
+  size_t length;
+  size_t capacity;
+};
+
+size_t
+get_length(struct ArraySlice* s) {
+  return s->length;
+}
+
+size_t
+get_capacity(struct ArraySlice* s) {
+  return s->capacity;
+}
+
+char*
+get_value(struct ArraySlice* s) {
+  return s->value;
+}
+
+bool
+is_empty(struct ArraySlice* s) {
+  return s->is_empty;
+}
 
 void
 free_string_array(struct ArraySlice* result) {
