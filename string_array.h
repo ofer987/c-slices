@@ -46,4 +46,4 @@ struct ArraySlice*
 append_string_array(struct ArraySlice* array_slice, char* new_value);
 
 size_t
-my_strlen(char* string);
+my_strlen(const char* string);
