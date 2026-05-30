@@ -11,15 +11,19 @@ endif
 .PHONY: all
 all: clean test build
 
-build: main.c
-	$(CC) $(CFLAGS) -o main main.c
+build: main.c string_array.c
+	$(CC) $(CFLAGS) -o main main.c string_array.c
 
 run: all
 	./main
 
 .PHONY: test
-test:
+test: test_string_array
+	./test_string_array
+
+test_string_array: test_string_array.c string_array.c vendor/unity/unity.c
+	$(CC) $(CFLAGS) -I. -o test_string_array test_string_array.c string_array.c vendor/unity/unity.c
 
 .PHONY: clean
 clean:
-	rm -f main
+	rm -f main test_string_array
