@@ -1,4 +1,5 @@
 CC = clang
+CLANG_FORMAT := $(shell which clang-format 2>/dev/null || echo /opt/homebrew/opt/llvm/bin/clang-format)
 WERROR ?= 1e
 DEFAULT_CFLAGS = -x c -std=c23 -Wall -Wextra
 
@@ -23,6 +24,10 @@ test: test_string_array
 
 test_string_array: test_string_array.c string_array.c vendor/unity/unity.c
 	$(CC) $(CFLAGS) -I. -o test_string_array test_string_array.c string_array.c vendor/unity/unity.c
+
+.PHONY: lint
+lint:
+	./scripts/check-format.sh
 
 .PHONY: clean
 clean:
