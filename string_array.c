@@ -83,7 +83,13 @@ struct Result*
 copy_into_array_slice(size_t starting_value, char* existing_value, struct ArraySlice* destination) {
   if (existing_value == NULL) {
     struct Result* result = malloc(sizeof(struct Result));
-    *result = (struct Result){.array_slice = destination, .error_message = NULL, .is_success = true};
+    // clang-format off
+    *result = (struct Result) {
+      .array_slice = destination,
+      .error_message = NULL,
+      .is_success = true
+    };
+    // clang-format on
     return result;
   }
 
@@ -95,9 +101,13 @@ copy_into_array_slice(size_t starting_value, char* existing_value, struct ArrayS
 
     if (destination == NULL) {
       struct Result* failure = malloc(sizeof(struct Result));
-      *failure = (struct Result){.error_message = "Capacity is not large enough",
-                                 .is_success = false,
-                                 .array_slice = destination};
+      // clang-format off
+      *failure = (struct Result) {
+        .error_message = "Capacity is not large enough",
+        .is_success = false,
+        .array_slice = destination
+      };
+      // clang-format on
       return failure;
     }
   }
@@ -111,7 +121,13 @@ copy_into_array_slice(size_t starting_value, char* existing_value, struct ArrayS
   destination->is_empty = false;
 
   struct Result* result = malloc(sizeof(struct Result));
-  *result = (struct Result){.array_slice = destination, .error_message = NULL, .is_success = true};
+  // clang-format off
+  *result = (struct Result) {
+    .array_slice = destination,
+    .error_message = NULL,
+    .is_success = true
+  };
+  // clang-format on
   return result;
 }
 
