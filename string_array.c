@@ -39,31 +39,29 @@ struct Result {
 };
 
 bool
-is_success(struct Result* r) {
-  return r->is_success;
+is_success(struct Result* result) {
+  return result->is_success;
 }
 
 char*
-get_error_message(struct Result* r) {
-  return r->error_message;
+get_error_message(struct Result* result) {
+  return result->error_message;
 }
 
 struct ArraySlice*
-get_array_slice(struct Result* r) {
-  return r->array_slice;
+get_array_slice(struct Result* result) {
+  return result->array_slice;
 }
 
 void
-free_result(struct Result* r) {
-  free(r);
+free_result(struct Result* result) {
+  free(result);
 }
 
 void
 free_string_array(struct ArraySlice* result) {
   free(result->value);
   free(result);
-
-  return;
 }
 
 struct ArraySlice*
@@ -182,7 +180,7 @@ append_string_array(struct ArraySlice* array_slice, char* new_value) {
 }
 
 size_t
-my_strlen(char* string) {
+my_strlen(const char* string) {
   if (string == NULL) {
     printf("string is NULL\n");
 

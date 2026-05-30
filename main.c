@@ -16,7 +16,7 @@ main(int argc, char* argv[]) {
 
   size_t foobar = 123;
 
-  double x = 0.23f;
+  double x = 0.23;
   double y = (double)foobar + x;
   printf("Value of y is %zu\n", (size_t)y);
 
@@ -88,6 +88,4 @@ print_hello_world(size_t count, char* names[]) {
     strlen(hello_world_value));
   printf("hello_world is \'%s\'\n", hello_world_value);
   printf("Capacity is %zu\n", hello_world_capacity);
-
-  return;
 }
