@@ -106,6 +106,51 @@ Compound literal assignments must be written in expanded multi-line form and wra
 - Closing `};` at the same indent as the assignment.
 - No trailing comma on the last field.
 
+## Git commit messages
+
+Follow the [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+
+**Format:**
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Types:**
+
+| Type       | When to use                                      |
+| ---------- | ------------------------------------------------ |
+| `feat`     | New feature (MINOR version bump)                 |
+| `fix`      | Bug fix (PATCH version bump)                     |
+| `build`    | Build system or external dependency changes      |
+| `chore`    | Maintenance tasks that don't modify src or tests |
+| `ci`       | CI configuration changes                         |
+| `docs`     | Documentation only                               |
+| `style`    | Formatting, whitespace — no logic change         |
+| `refactor` | Code restructure without feature or fix          |
+| `perf`     | Performance improvement                          |
+| `test`     | Adding or correcting tests                       |
+| `revert`   | Reverts a previous commit                        |
+
+**Breaking changes** — use `!` before the colon or a `BREAKING CHANGE:` footer:
+
+```
+feat!: remove deprecated append API
+
+BREAKING CHANGE: append_string_array no longer accepts NULL array_slice.
+```
+
+**Rules:**
+
+- First line (`type[scope]: description`) must be 72 characters or fewer
+- Description is lowercase, imperative mood, no trailing period
+- Body begins one blank line after the description; each line 72 characters or fewer
+- Footers begin one blank line after the body, using `Token: value` syntax (hyphens instead of spaces in token names)
+
 ## Testing
 
 - Framework: Unity (vendored in `vendor/unity/`)
