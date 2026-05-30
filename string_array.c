@@ -90,6 +90,7 @@ copy_into_array_slice(size_t starting_value, char* existing_value, struct ArrayS
       .is_success = true
     };
     // clang-format on
+
     return result;
   }
 
@@ -108,6 +109,7 @@ copy_into_array_slice(size_t starting_value, char* existing_value, struct ArrayS
         .array_slice = destination
       };
       // clang-format on
+
       return failure;
     }
   }
@@ -128,6 +130,7 @@ copy_into_array_slice(size_t starting_value, char* existing_value, struct ArrayS
     .is_success = true
   };
   // clang-format on
+
   return result;
 }
 

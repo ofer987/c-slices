@@ -159,7 +159,6 @@ test_copy_into_array_slice_null_value_returns_destination(void) {
   free_string_array(s);
 }
 
-
 int
 main(void) {
   UNITY_BEGIN();
@@ -187,5 +186,6 @@ main(void) {
   RUN_TEST(test_copy_into_array_slice_success_no_error_message);
   RUN_TEST(test_copy_into_array_slice_null_value_is_success);
   RUN_TEST(test_copy_into_array_slice_null_value_returns_destination);
+
   return UNITY_END();
 }
