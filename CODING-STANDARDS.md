@@ -15,10 +15,12 @@ Run `clang-format` before committing. Key rules from `.clang-format`:
 - 120-column limit
 - Pointer alignment: left — `char* p`, not `char *p`
 - Return type on its own line:
+
   ```c
   char*
   get_value(struct ArraySlice* s);
   ```
+
 - Always use braces for control statements (`InsertBraces: true`)
 - No short `if`/`for`/`while` on a single line
 - Sort `#include` directives; project headers before system headers
@@ -28,6 +30,33 @@ Run `clang-format` before committing. Key rules from `.clang-format`:
   size_t length = compute_length(s);
 
   return length;
+  ```
+
+- Always place a blank line before a `free` or a `free_*` statement:
+
+  ```c
+
+  char* buf = malloc(40);
+
+  free(buf);
+  ```
+
+  And,
+
+  ```c
+  char* bug = make_memory(40);
+
+  free_memory(buf);
+  ```
+
+  However, multiple `free` and `free_*` statements can be placed together without line breaks, e.g.,
+
+  ```c
+  int index = 1;
+
+  free_memory(buf);
+  free_memory(result);
+  free(c);
   ```
 
 - Always place a blank line after a guard clause (an early `return` that exits on invalid input):
@@ -112,7 +141,7 @@ Follow the [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v
 
 **Format:**
 
-```
+```gitcommit
 <type>[optional scope]: <description>
 
 [optional body]
@@ -138,7 +167,7 @@ Follow the [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v
 
 **Breaking changes** — use `!` before the colon or a `BREAKING CHANGE:` footer:
 
-```
+```gitcommit
 feat!: remove deprecated append API
 
 BREAKING CHANGE: append_string_array no longer accepts NULL array_slice.

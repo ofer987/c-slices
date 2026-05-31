@@ -152,6 +152,7 @@ make_string_array(char* existing_value, size_t capacity) {
   struct Result* message = copy_into_array_slice(0, existing_value, result);
   if (!is_success(message)) {
     printf("%s\n", get_error_message(message));
+
     free_result(message);
 
     return NULL;
@@ -168,12 +169,14 @@ append_string_array(struct ArraySlice* array_slice, char* new_value) {
 
   if (!is_success(result)) {
     printf("%s\n", get_error_message(result));
+
     free_result(result);
 
     return NULL;
   }
 
   struct ArraySlice* array = get_array_slice(result);
+
   free_result(result);
 
   return array;
