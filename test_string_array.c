@@ -78,6 +78,25 @@ test_append_string_array_grows_capacity(void) {
   s = append_string_array(s, " world");
   TEST_ASSERT_EQUAL_STRING("hello world", get_value(s));
   TEST_ASSERT_EQUAL_size_t(11, get_length(s));
+  TEST_ASSERT_EQUAL_size_t(22, get_capacity(s));
+  free_string_array(s);
+}
+
+void
+test_append_string_array_doubles_capacity_of_length(void) {
+  struct ArraySlice* s = make_string_array("hello", 6);
+  s = append_string_array(s, ", world today");
+  TEST_ASSERT_EQUAL_size_t(get_length(s) * 2, get_capacity(s));
+  free_string_array(s);
+}
+
+void
+test_append_string_array_grows_capacity_by_a_lot(void) {
+  struct ArraySlice* s = make_string_array("hello", 6);
+  s = append_string_array(s, " my big bold beautiful world");
+  TEST_ASSERT_EQUAL_STRING("hello my big bold beautiful world", get_value(s));
+  TEST_ASSERT_EQUAL_size_t(33, get_length(s));
+  TEST_ASSERT_EQUAL_size_t(66, get_capacity(s));
   free_string_array(s);
 }
 
@@ -175,6 +194,8 @@ main(void) {
   RUN_TEST(test_append_string_array_updates_value);
   RUN_TEST(test_append_string_array_updates_length);
   RUN_TEST(test_append_string_array_grows_capacity);
+  RUN_TEST(test_append_string_array_grows_capacity_by_a_lot);
+  RUN_TEST(test_append_string_array_doubles_capacity_of_length);
   RUN_TEST(test_append_string_array_multiple);
 
   RUN_TEST(test_add_capacity_increases_capacity);
