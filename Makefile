@@ -12,18 +12,20 @@ endif
 .PHONY: all
 all: clean test build
 
-build: main.c string_array.c
-	$(CC) $(CFLAGS) -o main main.c string_array.c
+build: main.c string_builder.c
+	mkdir -p dist
+	$(CC) $(CFLAGS) -o dist/main main.c string_builder.c
 
 run: all
-	./main
+	./dist/main
 
 .PHONY: test
-test: test_string_array
-	./test_string_array
+test: test_string_builder
+	./test/test_string_builder
 
-test_string_array: test_string_array.c string_array.c vendor/unity/unity.c
-	$(CC) $(CFLAGS) -I. -o test_string_array test_string_array.c string_array.c vendor/unity/unity.c
+test_string_builder: test_string_builder.c string_builder.c vendor/unity/unity.c
+	mkdir -p test
+	$(CC) $(CFLAGS) -I. -o test/test_string_builder test_string_builder.c string_builder.c vendor/unity/unity.c
 
 .PHONY: lint
 lint:
@@ -31,4 +33,4 @@ lint:
 
 .PHONY: clean
 clean:
-	rm -f main test_string_array
+	rm -rf ./dist/main ./test/test_string_builder

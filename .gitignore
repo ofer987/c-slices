@@ -4,9 +4,8 @@
 *.so
 *.dylib
 
-# binaries
-main
-test_string_array
+# Clangd trace
+here.json
 
 # Executables
 *.out
@@ -14,6 +13,7 @@ a.out
 
 # Build directories
 build/
+test/
 dist/
 out/
 
