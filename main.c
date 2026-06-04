@@ -1,4 +1,4 @@
-#include "string_array.h"
+#include "string_builder.h"
 
 #include <stddef.h>
 #include <stdio.h>
@@ -55,37 +55,34 @@ print_hello_world(size_t count, char* names[]) {
     return;
   }
 
-  struct ArraySlice* hello_world = make_string_array("Hello", 20);
+  struct StringBuilder* hello_world = make_string_builder("Hello", 20);
 
   if (count == 2) {
-    hello_world = append_string_array(hello_world, " ");
-    hello_world = append_string_array(hello_world, names[1]);
+    hello_world = append_string_builder(hello_world, " ");
+    hello_world = append_string_builder(hello_world, names[1]);
   } else if (count == 3) {
-    hello_world = append_string_array(hello_world, " ");
-    hello_world = append_string_array(hello_world, names[1]);
-    hello_world = append_string_array(hello_world, " and ");
-    hello_world = append_string_array(hello_world, names[2]);
+    hello_world = append_string_builder(hello_world, " ");
+    hello_world = append_string_builder(hello_world, names[1]);
+    hello_world = append_string_builder(hello_world, " and ");
+    hello_world = append_string_builder(hello_world, names[2]);
   } else {
     for (size_t index = 1; index < count - 1; index += 1) {
-      hello_world = append_string_array(hello_world, " ");
-      hello_world = append_string_array(hello_world, names[index]);
-      hello_world = append_string_array(hello_world, ",");
+      hello_world = append_string_builder(hello_world, " ");
+      hello_world = append_string_builder(hello_world, names[index]);
+      hello_world = append_string_builder(hello_world, ",");
     }
 
-    hello_world = append_string_array(hello_world, " and ");
-    hello_world = append_string_array(hello_world, names[count - 1]);
+    hello_world = append_string_builder(hello_world, " and ");
+    hello_world = append_string_builder(hello_world, names[count - 1]);
   }
 
   char* hello_world_value = get_value(hello_world);
   size_t hello_world_length = get_length(hello_world);
   size_t hello_world_capacity = get_capacity(hello_world);
-  size_t length = my_strlen(hello_world_value);
 
-  printf(
-    "Size of hello_world is %zu and my_strlen is %zu and strlen is %zu\n",
-    hello_world_length,
-    length,
-    strlen(hello_world_value));
+  printf("Size of hello_world is %zu and strlen is %zu\n", hello_world_length, strlen(hello_world_value));
   printf("hello_world is \'%s\'\n", hello_world_value);
   printf("Capacity is %zu\n", hello_world_capacity);
+
+  free_string_builder(hello_world);
 }

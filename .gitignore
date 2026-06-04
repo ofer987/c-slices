@@ -6,7 +6,10 @@
 
 # binaries
 main
-test_string_array
+test_string_builder
+
+# Clangd trace
+here.json
 
 # Executables
 *.out
