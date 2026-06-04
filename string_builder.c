@@ -40,7 +40,7 @@ free_string_builder(struct StringBuilder* s) {
 static struct StringBuilder*
 add_capacity(struct StringBuilder* s, size_t new_capacity) {
   if (new_capacity <= s->capacity) {
-    return NULL;
+    return nullptr;
   }
 
   struct StringBuilder* larger = make_string_builder(s->value, new_capacity);
@@ -52,7 +52,7 @@ add_capacity(struct StringBuilder* s, size_t new_capacity) {
 
 static struct StringBuilder*
 write_at(size_t offset, char* src, struct StringBuilder* dest) {
-  if (src == NULL) {
+  if (src == nullptr) {
     return dest;
   }
 
@@ -62,8 +62,8 @@ write_at(size_t offset, char* src, struct StringBuilder* dest) {
   if (new_length > dest->capacity) {
     dest = add_capacity(dest, new_length * 2);
 
-    if (dest == NULL) {
-      return NULL;
+    if (dest == nullptr) {
+      return nullptr;
     }
   }
 
@@ -77,12 +77,12 @@ write_at(size_t offset, char* src, struct StringBuilder* dest) {
 struct StringBuilder*
 make_string_builder(char* existing_value, size_t capacity) {
   if (capacity == 0) {
-    return NULL;
+    return nullptr;
   }
 
   struct StringBuilder* s = malloc(sizeof(struct StringBuilder));
-  if (s == NULL) {
-    return NULL;
+  if (s == nullptr) {
+    return nullptr;
   }
 
   // clang-format off
@@ -93,18 +93,18 @@ make_string_builder(char* existing_value, size_t capacity) {
   };
   // clang-format on
 
-  if (s->value == NULL) {
+  if (s->value == nullptr) {
     free(s);
 
-    return NULL;
+    return nullptr;
   }
 
-  if (existing_value != NULL) {
+  if (existing_value != nullptr) {
     struct StringBuilder* result = write_at(0, existing_value, s);
-    if (result == NULL) {
+    if (result == nullptr) {
       free_string_builder(s);
 
-      return NULL;
+      return nullptr;
     }
 
     s = result;
@@ -117,8 +117,8 @@ struct StringBuilder*
 append_string_builder(struct StringBuilder* s, char* new_value) {
   struct StringBuilder* result = write_at(s->length, new_value, s);
 
-  if (result == NULL) {
-    return NULL;
+  if (result == nullptr) {
+    return nullptr;
   }
 
   return result;

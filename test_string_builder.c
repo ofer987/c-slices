@@ -35,7 +35,7 @@ test_make_string_builder_sets_value(void) {
 
 void
 test_make_string_builder_null_value(void) {
-  struct StringBuilder* s = make_string_builder(NULL, 20);
+  struct StringBuilder* s = make_string_builder(nullptr, 20);
   TEST_ASSERT_EQUAL_size_t(0, get_length(s));
   TEST_ASSERT_TRUE(is_empty(s));
 

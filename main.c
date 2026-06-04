@@ -30,7 +30,7 @@ main(int argc, char* argv[]) {
   printf("length of another_name is %zu bytes\n", strlen(another_name));
 
   size_t index = 0;
-  if (another_name != NULL) {
+  if (another_name != nullptr) {
     while (true) {
       if (another_name[index] == '\0') {
         break;
