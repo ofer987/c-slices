@@ -61,6 +61,34 @@ test_my_strlen_matches_strlen(void) {
 }
 
 void
+test_append_string_array_does_not_change_capacity(void) {
+  struct ArraySlice* s = make_string_array("hello", 20);
+  TEST_ASSERT_EQUAL_size_t(20, get_capacity(s));
+
+  s = append_string_array(s, " world");
+  s = append_string_array(s, " 12345678");
+  TEST_ASSERT_EQUAL_STRING("hello world 12345678", get_value(s));
+  TEST_ASSERT_EQUAL_size_t(20, get_length(s));
+  TEST_ASSERT_EQUAL_size_t(20, get_capacity(s));
+
+  free_string_array(s);
+}
+
+void
+test_append_string_array_does_changes_capacity(void) {
+  struct ArraySlice* s = make_string_array("hello", 20);
+  TEST_ASSERT_EQUAL_size_t(20, get_capacity(s));
+
+  s = append_string_array(s, " world");
+  s = append_string_array(s, " 123456789");
+  TEST_ASSERT_EQUAL_STRING("hello world 123456789", get_value(s));
+  TEST_ASSERT_EQUAL_size_t(21, get_length(s));
+  TEST_ASSERT_EQUAL_size_t(42, get_capacity(s));
+
+  free_string_array(s);
+}
+
+void
 test_append_string_array_updates_value(void) {
   struct ArraySlice* s = make_string_array("hello", 20);
   s = append_string_array(s, " world");
@@ -209,6 +237,8 @@ main(void) {
   RUN_TEST(test_my_strlen_empty_string);
   RUN_TEST(test_my_strlen_matches_strlen);
 
+  RUN_TEST(test_append_string_array_does_not_change_capacity);
+  RUN_TEST(test_append_string_array_does_changes_capacity);
   RUN_TEST(test_append_string_array_updates_value);
   RUN_TEST(test_append_string_array_updates_length);
   RUN_TEST(test_append_string_array_grows_capacity);
