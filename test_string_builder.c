@@ -127,14 +127,13 @@ test_append_string_builder_grows_capacity_by_a_lot(void) {
 
 void
 test_make_string_builder_at_length_max_array_capcity_size_plus_one_returns_null(void) {
-  // MAX_ARRAY_CAPACITY_SIZE is 65'536 - 1 = 65'535; last valid capacity is one below that
-  struct StringBuilder* s = make_string_builder(nullptr, 65'535);
+  struct StringBuilder* s = make_string_builder(nullptr, MAX_ARRAY_CAPACITY_SIZE);
   TEST_ASSERT_NOT_NULL(s);
 
   TEST_ASSERT_EQUAL_size_t(0, get_length(s));
 
   struct StringBuilder* appended_sb;
-  for (size_t index = 0; index < 65'535; index += 1) {
+  for (size_t index = 0; index < MAX_ARRAY_CAPACITY_SIZE; index += 1) {
     appended_sb = append_string_builder(s, "a");
 
     TEST_ASSERT_EQUAL_size_t(appended_sb, s);
@@ -142,7 +141,7 @@ test_make_string_builder_at_length_max_array_capcity_size_plus_one_returns_null(
     s = appended_sb;
   }
 
-  TEST_ASSERT_EQUAL_size_t(65'535, get_length(s));
+  TEST_ASSERT_EQUAL_size_t(MAX_ARRAY_CAPACITY_SIZE, get_length(s));
 
   appended_sb = append_string_builder(s, "l");
   TEST_ASSERT_NULL(appended_sb);
@@ -153,8 +152,7 @@ test_make_string_builder_at_length_max_array_capcity_size_plus_one_returns_null(
 
 void
 test_make_string_builder_at_max_capacity_returns_non_null(void) {
-  // MAX_ARRAY_CAPACITY_SIZE is 65'536 - 1 = 65'535; last valid capacity is one below that
-  struct StringBuilder* s = make_string_builder(nullptr, 65'535);
+  struct StringBuilder* s = make_string_builder(nullptr, MAX_ARRAY_CAPACITY_SIZE);
   TEST_ASSERT_NOT_NULL(s);
 
   free_string_builder(s);
@@ -162,8 +160,7 @@ test_make_string_builder_at_max_capacity_returns_non_null(void) {
 
 void
 test_make_string_builder_exceeds_max_capacity_returns_null(void) {
-  // capacity == MAX_ARRAY_CAPACITY_SIZE (65'535) must be rejected
-  struct StringBuilder* s = make_string_builder(nullptr, 65'536);
+  struct StringBuilder* s = make_string_builder(nullptr, MAX_ARRAY_CAPACITY_SIZE + 1);
   TEST_ASSERT_NULL(s);
 }
 

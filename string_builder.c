@@ -16,9 +16,6 @@
 #define SB_REQUIRE(s, ret) assert((s) != nullptr)
 #endif
 
-// Account for the '\0' terminator
-#define MAX_ARRAY_CAPACITY_SIZE 65'536 - 1
-
 struct StringBuilder {
   char* value;
   size_t length;
