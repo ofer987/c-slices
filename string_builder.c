@@ -17,7 +17,7 @@
 #endif
 
 // Account for the '\0' terminator
-#define MAX_ARRAY_CAPCITY_SIZE 65'536 - 1
+#define MAX_ARRAY_CAPACITY_SIZE 65'536 - 1
 
 struct StringBuilder {
   char* value;
@@ -93,7 +93,7 @@ write_at(size_t offset, char* src, struct StringBuilder* dest) {
    * (new_length * 2)
    */
   if (new_length > dest->capacity) {
-    if (new_length >= ((MAX_ARRAY_CAPCITY_SIZE + 1) / 2) || new_length >= (SIZE_MAX / 2)) {
+    if (new_length >= ((MAX_ARRAY_CAPACITY_SIZE + 1) / 2) || new_length >= (SIZE_MAX / 2)) {
       return nullptr;
     }
 
@@ -117,9 +117,9 @@ make_string_builder(char* existing_value, size_t capacity) {
     return nullptr;
   }
 
-  // Validate that capacity is not larger than MAX_ARRAY_CAPCITY_SIZE and that it will not cause a
+  // Validate that capacity is not larger than MAX_ARRAY_CAPACITY_SIZE and that it will not cause a
   // buffer overflow (e.g., wrap back to 0) if larger than the largest value of size_t
-  if (capacity >= MAX_ARRAY_CAPCITY_SIZE && capacity < SIZE_MAX - 1) {
+  if (capacity > MAX_ARRAY_CAPACITY_SIZE && capacity < SIZE_MAX) {
     return nullptr;
   }
 
