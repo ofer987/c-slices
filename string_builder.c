@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Account for the '\0' terminator
+#define MAX_ARRAY_CAPCITY_SIZE 65'536 - 1
+
 struct StringBuilder {
   char* value;
   size_t length;
@@ -45,6 +48,10 @@ add_capacity(struct StringBuilder* s, size_t new_capacity) {
 
   struct StringBuilder* larger = make_string_builder(s->value, new_capacity);
 
+  if (larger == nullptr) {
+    return nullptr;
+  }
+
   free_string_builder(s);
 
   return larger;
@@ -59,7 +66,16 @@ write_at(size_t offset, char* src, struct StringBuilder* dest) {
   size_t src_length = strlen(src);
   size_t new_length = offset + src_length;
 
+  /*
+   * new_length <= (SIZE_MAX - 1)
+   * new_length <= (((SIZE_MAX - 1) + 1) / 2) - 1
+   * (new_length * 2)
+   */
   if (new_length > dest->capacity) {
+    if (new_length >= ((MAX_ARRAY_CAPCITY_SIZE + 1) / 2) || new_length >= (SIZE_MAX / 2)) {
+      return nullptr;
+    }
+
     dest = add_capacity(dest, new_length * 2);
 
     if (dest == nullptr) {
@@ -77,6 +93,12 @@ write_at(size_t offset, char* src, struct StringBuilder* dest) {
 struct StringBuilder*
 make_string_builder(char* existing_value, size_t capacity) {
   if (capacity == 0) {
+    return nullptr;
+  }
+
+  // Validate that capacity is not larger than MAX_ARRAY_CAPCITY_SIZE and that it will not cause a
+  // buffer overflow (e.g., wrap back to 0) if larger than the largest value of size_t
+  if (capacity >= MAX_ARRAY_CAPCITY_SIZE && capacity < SIZE_MAX - 1) {
     return nullptr;
   }
 

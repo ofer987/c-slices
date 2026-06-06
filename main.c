@@ -49,6 +49,17 @@ main(int argc, char* argv[]) {
   return 0;
 }
 
+struct StringBuilder*
+append_string_or_fail(struct StringBuilder* sb, char* new_value) {
+  struct StringBuilder* result = append_string_builder(sb, new_value);
+
+  if (result == nullptr) {
+    exit(EXIT_FAILURE);
+  }
+
+  return result;
+}
+
 void
 print_hello_world(size_t count, char* names[]) {
   if (count < 2) {
@@ -58,22 +69,27 @@ print_hello_world(size_t count, char* names[]) {
   struct StringBuilder* hello_world = make_string_builder("Hello", 20);
 
   if (count == 2) {
-    hello_world = append_string_builder(hello_world, " ");
-    hello_world = append_string_builder(hello_world, names[1]);
+    hello_world = append_string_or_fail(hello_world, " ");
+    hello_world = append_string_or_fail(hello_world, names[1]);
   } else if (count == 3) {
-    hello_world = append_string_builder(hello_world, " ");
-    hello_world = append_string_builder(hello_world, names[1]);
-    hello_world = append_string_builder(hello_world, " and ");
-    hello_world = append_string_builder(hello_world, names[2]);
+    hello_world = append_string_or_fail(hello_world, " ");
+
+    hello_world = append_string_or_fail(hello_world, names[1]);
+
+    hello_world = append_string_or_fail(hello_world, " and ");
+
+    hello_world = append_string_or_fail(hello_world, names[2]);
   } else {
     for (size_t index = 1; index < count - 1; index += 1) {
-      hello_world = append_string_builder(hello_world, " ");
-      hello_world = append_string_builder(hello_world, names[index]);
-      hello_world = append_string_builder(hello_world, ",");
+      hello_world = append_string_or_fail(hello_world, " ");
+
+      hello_world = append_string_or_fail(hello_world, names[index]);
+
+      hello_world = append_string_or_fail(hello_world, ",");
     }
 
-    hello_world = append_string_builder(hello_world, " and ");
-    hello_world = append_string_builder(hello_world, names[count - 1]);
+    hello_world = append_string_or_fail(hello_world, " and ");
+    hello_world = append_string_or_fail(hello_world, names[count - 1]);
   }
 
   char* hello_world_value = get_value(hello_world);
