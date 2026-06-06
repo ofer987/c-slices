@@ -1,8 +1,20 @@
 #include "string_builder.h"
 
+#include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef NDEBUG
+#define SB_REQUIRE(s, ret) \
+  do {                     \
+    if ((s) == nullptr) {  \
+      return ret;          \
+    }                      \
+  } while (0)
+#else
+#define SB_REQUIRE(s, ret) assert((s) != nullptr)
+#endif
 
 // Account for the '\0' terminator
 #define MAX_ARRAY_CAPCITY_SIZE 65'536 - 1
@@ -15,28 +27,37 @@ struct StringBuilder {
 
 size_t
 get_length(struct StringBuilder* s) {
+  SB_REQUIRE(s, 0);
+
   return s->length;
 }
 
 size_t
 get_capacity(struct StringBuilder* s) {
+  SB_REQUIRE(s, 0);
+
   return s->capacity;
 }
 
 char*
 get_value(struct StringBuilder* s) {
+  SB_REQUIRE(s, nullptr);
+
   return s->value;
 }
 
 bool
 is_empty(struct StringBuilder* s) {
+  SB_REQUIRE(s, true);
+
   return (bool)(s->length == 0);
 }
 
 void
 free_string_builder(struct StringBuilder* s) {
-  free(s->value);
+  SB_REQUIRE(s, );
 
+  free(s->value);
   free(s);
 }
 
@@ -137,6 +158,8 @@ make_string_builder(char* existing_value, size_t capacity) {
 
 struct StringBuilder*
 append_string_builder(struct StringBuilder* s, char* new_value) {
+  SB_REQUIRE(s, nullptr);
+
   struct StringBuilder* result = write_at(s->length, new_value, s);
 
   if (result == nullptr) {

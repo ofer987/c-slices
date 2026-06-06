@@ -14,7 +14,7 @@ AlignConsecutiveBitFields:
   AcrossEmptyLines: true
   AcrossComments: true
 AlignConsecutiveDeclarations: None
-AlignEscapedNewlines: Right
+AlignEscapedNewlines: Left
 AlignOperands: Align
 SortIncludes: true
 InsertBraces: true # Control statements must have curly brackets
