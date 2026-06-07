@@ -84,17 +84,27 @@ write_at(size_t offset, char* src, struct StringBuilder* dest) {
   size_t src_length = strlen(src);
   size_t new_length = offset + src_length;
 
-  /*
-   * new_length <= (SIZE_MAX - 1)
-   * new_length <= (((SIZE_MAX - 1) + 1) / 2) - 1
-   * (new_length * 2)
-   */
+  // Buffer overflow
+  if (new_length < offset) {
+    return nullptr;
+  }
+
+  // not enough capacity
+  if (new_length > MAX_ARRAY_CAPACITY_SIZE) {
+    return nullptr;
+  }
+
+  // Create new buffer
   if (new_length > dest->capacity) {
-    if (new_length >= ((MAX_ARRAY_CAPACITY_SIZE + 1) / 2) || new_length >= (SIZE_MAX / 2)) {
-      return nullptr;
+    // Can I double the capacity?
+    size_t new_capacity = new_length * 2;
+
+    // If there is not enough capacity, but still has enough leftover for the new_length
+    if (new_capacity > MAX_ARRAY_CAPACITY_SIZE) {
+      new_capacity = MAX_ARRAY_CAPACITY_SIZE;
     }
 
-    dest = add_capacity(dest, new_length * 2);
+    dest = add_capacity(dest, new_capacity);
 
     if (dest == nullptr) {
       return nullptr;
@@ -116,7 +126,7 @@ make_string_builder(char* existing_value, size_t capacity) {
 
   // Validate that capacity is not larger than MAX_ARRAY_CAPACITY_SIZE and that it will not cause a
   // buffer overflow (e.g., wrap back to 0) if larger than the largest value of size_t
-  if (capacity > MAX_ARRAY_CAPACITY_SIZE && capacity < SIZE_MAX) {
+  if (capacity > MAX_ARRAY_CAPACITY_SIZE) {
     return nullptr;
   }
 
@@ -131,6 +141,7 @@ make_string_builder(char* existing_value, size_t capacity) {
     .length = 0,
     .capacity = capacity
   };
+  s->value[0] = '\0';
   // clang-format on
 
   if (s->value == nullptr) {

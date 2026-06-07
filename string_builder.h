@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 // Maximum usable capacity (excludes the '\0' terminator byte)
-#define MAX_ARRAY_CAPACITY_SIZE 65'536 - 1
+#define MAX_ARRAY_CAPACITY_SIZE (65'536 - 1)
 
 typedef struct StringBuilder StringBuilder;
 
