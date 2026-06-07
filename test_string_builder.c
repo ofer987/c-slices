@@ -1,5 +1,6 @@
 #include "string_builder.h"
 #include "vendor/unity/unity.h"
+#include "vendor/unity/unity_internals.h"
 
 #include <stddef.h>
 
@@ -126,11 +127,90 @@ test_append_string_builder_grows_capacity_by_a_lot(void) {
 }
 
 void
+test_make_string_builder_at_length_max_array_capcity_size_plus_one_returns_null(void) {
+  struct StringBuilder* s = make_string_builder(nullptr, MAX_ARRAY_CAPACITY_SIZE);
+  TEST_ASSERT_NOT_NULL(s);
+
+  TEST_ASSERT_EQUAL_size_t(0, get_length(s));
+
+  struct StringBuilder* appended_sb;
+  for (size_t index = 0; index < MAX_ARRAY_CAPACITY_SIZE; index += 1) {
+    appended_sb = append_string_builder(s, "a");
+
+    TEST_ASSERT_EQUAL_size_t(appended_sb, s);
+    TEST_ASSERT_NOT_NULL(appended_sb);
+    s = appended_sb;
+  }
+
+  TEST_ASSERT_EQUAL_size_t(MAX_ARRAY_CAPACITY_SIZE, get_length(s));
+
+  appended_sb = append_string_builder(s, "l");
+  TEST_ASSERT_NULL(appended_sb);
+  TEST_ASSERT_NOT_NULL(s);
+
+  free_string_builder(s);
+}
+
+void
+test_make_string_builder_at_max_capacity_returns_non_null(void) {
+  struct StringBuilder* s = make_string_builder(nullptr, MAX_ARRAY_CAPACITY_SIZE);
+  TEST_ASSERT_NOT_NULL(s);
+
+  free_string_builder(s);
+}
+
+void
+test_make_string_builder_exceeds_max_capacity_returns_null(void) {
+  struct StringBuilder* s = make_string_builder(nullptr, MAX_ARRAY_CAPACITY_SIZE + 1);
+  TEST_ASSERT_NULL(s);
+}
+
+void
 test_append_string_builder_multiple(void) {
   struct StringBuilder* s = make_string_builder("hello", 20);
   s = append_string_builder(s, " ");
   s = append_string_builder(s, "world");
   TEST_ASSERT_EQUAL_STRING("hello world", get_value(s));
+
+  free_string_builder(s);
+}
+
+void
+test_append_string_builder_appends_when_capacity_is_slightly_above_half(void) {
+  struct StringBuilder* s = make_string_builder(nullptr, (MAX_ARRAY_CAPACITY_SIZE + 1) / 2);
+  TEST_ASSERT_NOT_NULL(s);
+
+  TEST_ASSERT_EQUAL_size_t(0, get_length(s));
+
+  struct StringBuilder* appended_sb;
+  for (size_t index = 0; index < (MAX_ARRAY_CAPACITY_SIZE + 1) / 2; index += 1) {
+    appended_sb = append_string_builder(s, "a");
+
+    TEST_ASSERT_EQUAL_size_t(appended_sb, s);
+    TEST_ASSERT_NOT_NULL(appended_sb);
+    s = appended_sb;
+  }
+
+  size_t expected_length = (MAX_ARRAY_CAPACITY_SIZE + 1) / 2;
+  size_t expected_capacity = (MAX_ARRAY_CAPACITY_SIZE + 1) / 2;
+  TEST_ASSERT_EQUAL_size_t(expected_length, get_length(s));
+  TEST_ASSERT_EQUAL_size_t(expected_capacity, get_capacity(s));
+
+  s = append_string_builder(s, "l");
+  TEST_ASSERT_EQUAL_size_t(expected_length + 1, get_length(s));
+  TEST_ASSERT_EQUAL_size_t(MAX_ARRAY_CAPACITY_SIZE, get_capacity(s));
+
+  s = append_string_builder(s, "a");
+  TEST_ASSERT_EQUAL_size_t(expected_length + 2, get_length(s));
+  TEST_ASSERT_EQUAL_size_t(MAX_ARRAY_CAPACITY_SIZE, get_capacity(s));
+
+  s = append_string_builder(s, "s");
+  TEST_ASSERT_EQUAL_size_t(expected_length + 3, get_length(s));
+  TEST_ASSERT_EQUAL_size_t(MAX_ARRAY_CAPACITY_SIZE, get_capacity(s));
+
+  s = append_string_builder(s, "t");
+  TEST_ASSERT_EQUAL_size_t(expected_length + 4, get_length(s));
+  TEST_ASSERT_EQUAL_size_t(MAX_ARRAY_CAPACITY_SIZE, get_capacity(s));
 
   free_string_builder(s);
 }
@@ -144,6 +224,8 @@ main(void) {
   RUN_TEST(test_make_string_builder_sets_value);
   RUN_TEST(test_make_string_builder_null_value);
   RUN_TEST(test_make_string_builder_zero_capacity_returns_null);
+  RUN_TEST(test_make_string_builder_at_max_capacity_returns_non_null);
+  RUN_TEST(test_make_string_builder_exceeds_max_capacity_returns_null);
 
   RUN_TEST(test_append_string_builder_does_not_change_capacity);
   RUN_TEST(test_append_string_builder_changes_capacity);
@@ -152,7 +234,9 @@ main(void) {
   RUN_TEST(test_append_string_builder_grows_capacity);
   RUN_TEST(test_append_string_builder_doubles_capacity_of_length);
   RUN_TEST(test_append_string_builder_grows_capacity_by_a_lot);
+  RUN_TEST(test_make_string_builder_at_length_max_array_capcity_size_plus_one_returns_null);
   RUN_TEST(test_append_string_builder_multiple);
+  RUN_TEST(test_append_string_builder_appends_when_capacity_is_slightly_above_half);
 
   return UNITY_END();
 }
